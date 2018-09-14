@@ -1,5 +1,8 @@
 package com.bridgelabz.microservice.fundoonotes.user.service;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -8,6 +11,11 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Service;
+
+import com.bridgelabz.microservice.fundoonotes.user.models.FacebookUser;
+import com.bridgelabz.microservice.fundoonotes.user.models.User;
+import com.bridgelabz.microservice.fundoonotes.user.repositories.UserRepository;
+import com.bridgelabz.microservice.fundoonotes.user.utility.JWTokenProvider;
 
 @Service
 public class FacebookService {
@@ -19,6 +27,12 @@ public class FacebookService {
 
 	String accessToken;
 
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private JWTokenProvider tokenProvider;
+
 	public String createFacebookAuthorizationURL() {
 		FacebookConnectionFactory connectionFactory = new FacebookConnectionFactory(facebookAppId, facebookSecret);
 		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
@@ -29,17 +43,39 @@ public class FacebookService {
 		return oauthOperations.buildAuthorizeUrl(params);
 	}
 
-	public void createFacebookAccessToken(String code) {
+	public String createFacebookAccessToken(String code) {
 		FacebookConnectionFactory connectionFactory = new FacebookConnectionFactory(facebookAppId, facebookSecret);
 		AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(code,
 				"http://localhost:8080/swagger-ui.html#!/user-controller/createFacebookAccessTokenUsingGET", null);
 		accessToken = accessGrant.getAccessToken();
+		FacebookUser facebookUser = getName();
+
+		Optional<com.bridgelabz.microservice.fundoonotes.user.models.User> optionalUser = userRepository.findByEmail(facebookUser.getEmail());
+
+		if (optionalUser.isPresent()) {
+			String token = tokenProvider.tokenGenerator(optionalUser.get().getUserId());
+
+			return token;
+		}
+		User user = new User();
+		user.setName(facebookUser.getName());
+		user.setEmail(facebookUser.getEmail());
+		user.setActive(true);
+
+		userRepository.save(user);
+
+		String token = tokenProvider.tokenGenerator(user.getUserId());
+
+		return token;
 	}
 
-	public String getName() {
+	public FacebookUser getName() {
 		Facebook facebook = new FacebookTemplate(accessToken);
-		// String[] fields = {"id", "name"};
-		return facebook.fetchObject("me", String.class, "name");
+
+		FacebookUser information = facebook.fetchObject("me", FacebookUser.class, "name", "email");
+
+		return information;
+
 	}
 
 }

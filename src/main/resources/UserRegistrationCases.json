@@ -1,0 +1,522 @@
+{
+	"SuccessfulRegistration": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "CREATED",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Registration Successful",
+				"status": 10
+			}
+		}
+	},
+	"EmailAlreadyRegistered": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Email already registered",
+				"status": 1
+			}
+		}
+	},
+	"NullNameValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": ""
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Name should have atleast 3 characters and atmost 12 characters",
+				"status": 1
+			}
+		}
+	},
+	"NameLengthValidation1": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Si"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Name should have atleast 3 characters and atmost 12 characters",
+				"status": 1
+			}
+		}
+	},
+	"NameLengthValidation2": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "qwertyuiopqwert"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Name should have atleast 3 characters and atmost 12 characters",
+				"status": 1
+			}
+		}
+	},
+	"NullNumberValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Contact number should be exactly 10 digit numbers",
+				"status": 1
+			}
+		}
+	},
+	"NumberValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "99396",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Contact number should be exactly 10 digit numbers",
+				"status": 1
+			}
+		}
+	},
+	"NumberFormatValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "asdf@12345",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Contact number should be exactly 10 digit numbers",
+				"status": 1
+			}
+		}
+	},
+	"NullPasswordValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should have atleast one uppercase character, atlest one lowercase character, one special character, and atleast one number",
+				"status": 1
+			}
+		}
+	},
+	"PasswordLengthValidation1": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Sim@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Sim@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should have atleast one uppercase character, atlest one lowercase character, one special character, and atleast one number",
+				"status": 1
+			}
+		}
+	},
+	"PasswordLengthValidation2": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@444qwertyuiopqwertyuiopqwefsdgfdghfg",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@444qwertyuiopqwertyuiopqwefsdgfdghfg",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should have atleast one uppercase character, atlest one lowercase character, one special character, and atleast one number",
+				"status": 1
+			}
+		}
+	},
+	"PasswordFormatValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "0123456789",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "0123456789",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should have atleast one uppercase character, atlest one lowercase character, one special character, and atleast one number",
+				"status": 1
+			}
+		}
+	},
+	"NullEmailValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 1
+			}
+		}
+	},
+	"EmailAlreadyExistValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Email already registered",
+				"status": 1
+			}
+		}
+	},
+	"EmailValidation1": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelinagmail.com",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 1
+			}
+		}
+	},
+	"EmailValidation2": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmailcom",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 1
+			}
+		}
+	},
+	"EmailValidation3": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "angelina@gmail",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 1
+			}
+		}
+	},
+	"EmailValidation4": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "@gmail",
+				"password": "Simran@4",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 1
+			}
+		}
+	},
+	"NullConfirmPasswordValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@5",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should match with confirm password",
+				"status": 1
+			}
+		}
+	},
+	"ConfirmPasswordMatchValidation": {
+		"request": {
+			"url": "/user/register",
+			"headers": {
+				
+			},
+			"body": {
+				"confirmPassword": "Simran@4",
+				"emailId": "simran.angelina@gmail.com",
+				"password": "Simran@5",
+				"phoneNumber": "9939620336",
+				"userName": "Simran"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should match with confirm password",
+				"status": 1
+			}
+		}
+	}
+}

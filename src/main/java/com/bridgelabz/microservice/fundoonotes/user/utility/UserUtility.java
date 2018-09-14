@@ -17,11 +17,10 @@ import com.bridgelabz.microservice.fundoonotes.user.models.User;
 
 public class UserUtility {
 
-	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern
-			.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$");
+	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}");
 
 	private static final Pattern PASSWORD_PATTERN = Pattern
-			.compile("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})");
+			.compile("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,32}");
 
 	private static final Pattern CONTACT_PATTERN = Pattern.compile("^[0-9]{10}$");
 
@@ -59,8 +58,9 @@ public class UserUtility {
 	}
 
 	public static void validateUserForRegistration(Registration registrationDto) throws RegistrationException {
-		if (registrationDto.getUserName() == null || registrationDto.getUserName().length() < 3) {
-			throw new RegistrationException("Name should have atleast 3 characters");
+		if (registrationDto.getUserName() == null || registrationDto.getUserName().length() < 3
+				|| registrationDto.getUserName().length() > 12) {
+			throw new RegistrationException("Name should have atleast 3 characters and atmost 12 characters");
 		}
 
 		if (registrationDto.getPhoneNumber() == null || (!validatePhoneNumber(registrationDto.getPhoneNumber()))) {
@@ -72,13 +72,14 @@ public class UserUtility {
 					+ "atlest one lowercase character, " + "one special character, " + "and atleast one number");
 		}
 
-		if (registrationDto.getEmailId() == null || registrationDto.getEmailId().length() == 0) {
+		if (registrationDto.getEmailId() == null || registrationDto.getEmailId().length() == 0
+				|| (!validateEmail(registrationDto.getEmailId()))) {
 			throw new RegistrationException("Incorrect email format");
 		}
 
 		if (registrationDto.getConfirmPassword() == null || registrationDto.getConfirmPassword().length() == 0
 				|| (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword()))) {
-			throw new RegistrationException("password should match with confirm password");
+			throw new RegistrationException("Password should match with confirm password");
 		}
 	}
 
@@ -114,7 +115,7 @@ public class UserUtility {
 			throw new LoginException("password should match with confirm password");
 		}
 	}
-	
+
 	public static String generateUUID() {
 		UUID randomString = UUID.randomUUID();
 		return randomString.toString();

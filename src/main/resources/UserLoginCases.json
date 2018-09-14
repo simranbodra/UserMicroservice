@@ -1,0 +1,24 @@
+{
+	"SuccessfulRegistration": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {"email":"simranbodra6@gmail.com",
+			"password":"Simran@4"
+			},
+			"method":"POST"
+		},
+		"response": {
+			"status": "OK",
+			"headers": {
+				"token": [""]
+			},
+			"body": {
+				"message": "Login Successful",
+				"status": 20
+			}
+		}
+	}
+}

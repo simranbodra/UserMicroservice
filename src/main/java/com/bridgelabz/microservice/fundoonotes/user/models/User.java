@@ -3,7 +3,10 @@ package com.bridgelabz.microservice.fundoonotes.user.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Document(indexName = "usersmsindex", type = "users")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User {
 
 	@Id
@@ -18,6 +21,8 @@ public class User {
 	private String password;
 
 	private boolean active;
+
+	private String profileImage;
 
 	public User() {
 		super();
@@ -69,6 +74,14 @@ public class User {
 
 	public void setActive(boolean status) {
 		active = status;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 }

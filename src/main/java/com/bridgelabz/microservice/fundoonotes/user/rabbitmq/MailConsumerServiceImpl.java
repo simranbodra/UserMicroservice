@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.microservice.fundoonotes.user.models.Mail;
 import com.bridgelabz.microservice.fundoonotes.user.service.MailService;
 
-@Service
+//@Service
 public class MailConsumerServiceImpl implements MailConsumerService {
 
 	@Autowired

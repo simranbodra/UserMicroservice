@@ -1,9 +1,13 @@
 package com.bridgelabz.microservice.fundoonotes.user.models;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class Mail {
+public class Mail implements Serializable {
+
+	private static final long serialVersionUID = -8341624465391637167L;
 
 	private String to;
 	private String subject;

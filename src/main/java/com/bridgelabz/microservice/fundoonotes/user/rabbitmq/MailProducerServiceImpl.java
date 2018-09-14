@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bridgelabz.microservice.fundoonotes.user.models.Mail;
 
-@Service
+//@Service
 public class MailProducerServiceImpl implements MailProducerService {
 
 	@Autowired
@@ -22,8 +22,6 @@ public class MailProducerServiceImpl implements MailProducerService {
 	@Override
 	public void send(Mail mail) {
 		rabbitTemplate.convertAndSend(exchange, routingkey, mail);
-
-		System.out.println("Send msg = " + mail);
 
 	}
 }

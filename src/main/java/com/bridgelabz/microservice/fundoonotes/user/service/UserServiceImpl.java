@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bridgelabz.microservice.fundoonotes.user.exceptions.ElasticsearchFailException;
+import com.bridgelabz.microservice.fundoonotes.user.exceptions.FileConversionException;
 import com.bridgelabz.microservice.fundoonotes.user.exceptions.LoginException;
 import com.bridgelabz.microservice.fundoonotes.user.exceptions.RegistrationException;
 import com.bridgelabz.microservice.fundoonotes.user.exceptions.UserNotActivatedException;
@@ -17,9 +20,10 @@ import com.bridgelabz.microservice.fundoonotes.user.models.Mail;
 import com.bridgelabz.microservice.fundoonotes.user.models.Registration;
 import com.bridgelabz.microservice.fundoonotes.user.models.ResetPassword;
 import com.bridgelabz.microservice.fundoonotes.user.models.User;
+import com.bridgelabz.microservice.fundoonotes.user.models.UserProfile;
 import com.bridgelabz.microservice.fundoonotes.user.rabbitmq.MailProducerService;
+import com.bridgelabz.microservice.fundoonotes.user.repositories.ElasticsearchRepository;
 import com.bridgelabz.microservice.fundoonotes.user.repositories.TokenRepository;
-import com.bridgelabz.microservice.fundoonotes.user.repositories.UserElasticsearchRepository;
 import com.bridgelabz.microservice.fundoonotes.user.repositories.UserRepository;
 import com.bridgelabz.microservice.fundoonotes.user.utility.JWTokenProvider;
 import com.bridgelabz.microservice.fundoonotes.user.utility.UserUtility;
@@ -27,11 +31,10 @@ import com.bridgelabz.microservice.fundoonotes.user.utility.UserUtility;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private static final String SUFFIX = "/";
 
 	@Autowired
-	private UserElasticsearchRepository userElasticsearchRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -45,17 +48,32 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private TokenRepository tokenRepository;
 
+	@Autowired
+	private ImageStorageService imageStorageService;
+
+	@Autowired
+	private ElasticsearchRepository elasticsearchRepository;
+
 	@Value("${activationLink}")
 	private String activationLink;
 
 	@Value("${resetPasswordLink}")
 	private String resetPasswordLink;
 
+	@Value("${defaultProfileImage}")
+	private String defaultProfileImage;
+
+	@Value("${profilePictures}")
+	private String profilePictures;
+
+	@Value("${standardQueueUrl}")
+	private String standardQueueUrl;
+
 	@Override
-	public void register(Registration registrationDto) throws RegistrationException, MessagingException {
+	public void register(Registration registrationDto) throws RegistrationException, MessagingException, ElasticsearchFailException {
 		UserUtility.validateUserForRegistration(registrationDto);
 
-		if (userRepository.findByEmail(registrationDto.getEmailId()).isPresent()) {
+		if (elasticsearchRepository.findByEmail(registrationDto.getEmailId()).isPresent()) {
 			throw new RegistrationException("Email already registered");
 		}
 
@@ -70,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
 		userRepository.save(user);
 
-		userElasticsearchRepository.save(user);
+		elasticsearchRepository.save(user);
 
 		String token = tokenProvider.tokenGenerator(user.getUserId());
 		Mail mail = new Mail();
@@ -79,13 +97,15 @@ public class UserServiceImpl implements UserService {
 		mail.setBody(activationLink + token);
 
 		producer.send(mail);
+
 	}
 
 	@Override
-	public String login(Login loginDto) throws LoginException, UserNotFoundException, UserNotActivatedException {
+	public String login(Login loginDto)
+			throws LoginException, UserNotFoundException, UserNotActivatedException, ElasticsearchFailException {
 		UserUtility.validateUserForLogin(loginDto);
 
-		Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
+		Optional<User> user = elasticsearchRepository.findByEmail(loginDto.getEmail());
 
 		if (!user.isPresent()) {
 			throw new UserNotFoundException("Email not registered");
@@ -106,10 +126,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void activate(String token) throws LoginException {
+	public void activate(String token) throws LoginException, ElasticsearchFailException {
 		String userId = tokenProvider.parseJWT(token);
 
-		Optional<User> optionalUser = userRepository.findById(userId);
+		Optional<User> optionalUser = elasticsearchRepository.findById(userId);
 
 		User user = optionalUser.get();
 
@@ -117,14 +137,15 @@ public class UserServiceImpl implements UserService {
 
 		userRepository.save(user);
 
-		userElasticsearchRepository.save(user);
+		elasticsearchRepository.save(user);
 
 	}
 
 	@Override
-	public void sendPasswordLink(String email) throws MessagingException, UserNotFoundException {
+	public void sendPasswordLink(String email)
+			throws MessagingException, UserNotFoundException, ElasticsearchFailException {
 
-		Optional<User> user = userRepository.findByEmail(email);
+		Optional<User> user = elasticsearchRepository.findByEmail(email);
 
 		if (!user.isPresent()) {
 			throw new UserNotFoundException("Email not registered");
@@ -143,14 +164,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void passwordReset(String token, ResetPassword resetPassword) throws LoginException, UserNotFoundException {
+	public void passwordReset(String token, ResetPassword resetPassword)
+			throws LoginException, UserNotFoundException, ElasticsearchFailException {
 		UserUtility.validateUserForResetPassword(resetPassword);
 
 		String userId = tokenRepository.get(token);
 
-		tokenRepository.delete(token);
-
-		Optional<User> optionalUser = userRepository.findById(userId);
+		Optional<User> optionalUser = elasticsearchRepository.findById(userId);
 
 		User user = optionalUser.get();
 
@@ -161,5 +181,64 @@ public class UserServiceImpl implements UserService {
 
 		userRepository.save(user);
 
+		elasticsearchRepository.save(user);
+
+	}
+
+	@Override
+	public String addProfilePicture(String userId, MultipartFile image)
+			throws FileConversionException, ElasticsearchFailException {
+
+		String folder = userId + SUFFIX + profilePictures;
+
+		imageStorageService.uploadFile(folder, image);
+
+		String picture = imageStorageService.getFile(folder, image.getOriginalFilename());
+
+		Optional<User> optionalUser = elasticsearchRepository.findById(userId);
+
+		User user = optionalUser.get();
+
+		user.setProfileImage(picture);
+
+		userRepository.save(user);
+
+		elasticsearchRepository.save(user);
+
+		return picture;
+	}
+
+	@Override
+	public void removeProfilePicture(String userId) throws ElasticsearchFailException {
+
+		String folder = userId + SUFFIX + profilePictures;
+
+		String defaultPicture = imageStorageService.getFile(folder, defaultProfileImage);
+
+		Optional<User> optionalUser = userRepository.findById(userId);
+
+		User user = optionalUser.get();
+
+		user.setProfileImage(defaultPicture);
+
+		userRepository.save(user);
+
+		elasticsearchRepository.save(user);
+	}
+
+	@Override
+	public UserProfile getProfileDetails(String userId) throws ElasticsearchFailException {
+
+		Optional<User> optionalUser = elasticsearchRepository.findById(userId);
+
+		User user = optionalUser.get();
+
+		UserProfile userProfile = new UserProfile();
+
+		userProfile.setUserName(user.getName());
+		userProfile.setUserEmail(user.getEmail());
+		userProfile.setImageUrl(user.getProfileImage());
+
+		return userProfile;
 	}
 }
