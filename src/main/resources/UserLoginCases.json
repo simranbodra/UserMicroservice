@@ -1,24 +1,210 @@
 {
-	"SuccessfulRegistration": {
+	"SuccessfulLogin": {
 		"request": {
 			"url": "/user/login",
 			"headers": {
 				
 			},
-			"body": {"email":"simranbodra6@gmail.com",
-			"password":"Simran@4"
+			"body": {
+				"email": "simranbodra6@gmail.com",
+				"password": "Simran@4"
 			},
-			"method":"POST"
+			"method": "POST"
 		},
 		"response": {
 			"status": "OK",
 			"headers": {
-				"token": [""]
+				
 			},
 			"body": {
 				"message": "Login Successful",
 				"status": 20
 			}
 		}
+	},
+	"InvalidPassword": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra6@gmail.com",
+				"password": "Simran@123"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect Password",
+				"status": 3
+			}
+		}
+	},
+	"EmailNotFound": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra@gmail.com",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Email not registered",
+				"status": 3
+			}
+		}
+	},
+	"NullEmailId": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 2
+			}
+		}
+	},
+	"NullPassword": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra6@gmail.com",
+				"password": ""
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Password should have atleast one uppercase character, atlest one lowercase character, one special character, and atleast one number",
+				"status": 2
+			}
+		}
+	},
+	"EmailValidation1": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra6gmail.com",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 2
+			}
+		}
+	},
+	"EmailValidation2": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra6@gmailcom",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 2
+			}
+		}
+	},
+	"EmailValidation3": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "simranbodra6@gmail",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 2
+			}
+		}
+	},
+	"EmailValidation4": {
+		"request": {
+			"url": "/user/login",
+			"headers": {
+				
+			},
+			"body": {
+				"email": "@gmail.com",
+				"password": "Simran@4"
+			},
+			"method": "POST"
+		},
+		"response": {
+			"status": "BAD_REQUEST",
+			"headers": {
+				
+			},
+			"body": {
+				"message": "Incorrect email format",
+				"status": 2
+			}
+		}
 	}
+					
 }

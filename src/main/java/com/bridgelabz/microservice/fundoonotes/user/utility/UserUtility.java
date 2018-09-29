@@ -102,6 +102,11 @@ public class UserUtility {
 			throw new LoginException("Password should have atleast one uppercase character, "
 					+ "atlest one lowercase character, " + "one special character, " + "and atleast one number");
 		}
+
+		if (loginDto.getEmail() == null || loginDto.getEmail().length() == 0 || (!validateEmail(loginDto.getEmail()))) {
+			throw new LoginException("Incorrect email format");
+		}
+
 	}
 
 	public static void validateUserForResetPassword(ResetPassword resetPassword) throws LoginException {

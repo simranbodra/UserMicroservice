@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 
 public class JsonRequest {
+
 	private String url;
 
 	private HttpHeaders headers;

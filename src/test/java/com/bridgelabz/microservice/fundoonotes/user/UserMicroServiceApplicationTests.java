@@ -1,6 +1,7 @@
 package com.bridgelabz.microservice.fundoonotes.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class UserMicroServiceApplicationTests {
 	@Before
 	public void setup() throws JsonParseException, JsonMappingException, IOException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-		casesFile = new ClassPathResource("UserRegistrationCases.json");
+		casesFile = new ClassPathResource("UserLoginCases.json");
 
 		cases = mapper.readValue(casesFile.getInputStream(), new TypeReference<Map<String, Json>>() {
 		});
@@ -56,7 +57,7 @@ public class UserMicroServiceApplicationTests {
 
 	@Test
 	public void test1() throws Exception {
-		Json json = cases.get("NameLengthValidation2");
+		Json json = cases.get("EmailValidation1");
 		test(json);
 	}
 
@@ -72,6 +73,9 @@ public class UserMicroServiceApplicationTests {
 		for (String key : json.getResponse().getHeaders().keySet()) {
 			assertEquals(json.getResponse().getHeaders().get(key), response.getHeader(key));
 		}
+		
+		assertNotNull(json.getResponse().getHeaders());
+		
 		assertEquals(getResponseBody(json), response.getContentAsString());
 	}
 
